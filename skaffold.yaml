@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+      manifests:
+        - ./Infra/K8S/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: noirefield/auth
+      context: Auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
