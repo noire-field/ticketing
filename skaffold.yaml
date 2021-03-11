@@ -8,7 +8,7 @@ build:
   local:
     push: false
   artifacts:
-    - image: noirefield/auth
+    - image: noirefield/ticketing-auth
       context: Auth
       docker:
         dockerfile: Dockerfile

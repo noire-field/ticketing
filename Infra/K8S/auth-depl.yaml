@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-deploy
+  name: auth-depl
 spec:
   replicas: 1
   selector:
@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
         - name: auth
-          image: noirefield/auth
+          image: noirefield/ticketing-auth
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
+  name: auth-srv
 spec:
   selector:
     app: auth
