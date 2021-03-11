@@ -9,7 +9,7 @@ build:
     push: false
   artifacts:
     - image: noirefield/ticketing-auth
-      context: Auth
+      context: auth
       docker:
         dockerfile: Dockerfile
       sync:
