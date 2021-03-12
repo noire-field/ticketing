@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
 
 import { User } from './../models/User';
 
@@ -24,12 +25,18 @@ router.post('/api/users/sign-up', [
     if(existingUser)
         throw new BadRequestError('Email in use');
 
-    const user = User.Build({  
-        email,
-        password
-    });
+    const user = User.Build({ email, password });
 
     await user.save();
+    
+    const userJwt = jwt.sign({
+        id: user.id,
+        email: user.email
+    }, 'abc');
+
+    req.session = {
+        jwt: userJwt
+    };
 
     return res.status(200).send({ success: true, data: user });
 });
