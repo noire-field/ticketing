@@ -32,6 +32,9 @@ app.all('*', () => { throw new NotFoundError });
 app.use(ErrorHandler);
 
 const Start = async () => {
+    if(!process.env.JWT_KEY)
+        throw new Error('Unable to load JWT_KEY from env.');
+
     try {
         await mongoose.connect('mongodb://auth-mongo-srv:27017/auth', {
             useNewUrlParser: true,
