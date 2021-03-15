@@ -34,7 +34,7 @@ router.post('/api/users/sign-up', [
         jwt: userJwt
     };
 
-    return res.status(200).send({ success: true, data: user });
+    return res.status(201).send({ success: true, data: user });
 });
 
 export { router as signUpRouter }

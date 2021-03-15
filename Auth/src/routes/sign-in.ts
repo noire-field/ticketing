@@ -20,7 +20,7 @@ router.post('/api/users/sign-in', [
     const existingUser = await User.findOne({ email });
     if(!existingUser)
         throw new BadRequestError('This user can not be found');
-    console.log(password)
+
     const passwordsMatch = await Password.Compare(existingUser.password, password);
     if(!passwordsMatch)
         throw new BadRequestError('Password is invalid');

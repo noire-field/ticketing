@@ -6,6 +6,7 @@ export const ErrorHandler = (err: Error, req: Request, res: Response, next: Next
     if(err instanceof CustomError)
         return res.status(err.statusCode).send({ errors: err.serializeErrors() });
         
+    console.log("Unexpected error");
     console.log(err);
     res.status(400).send({
         success: false,
