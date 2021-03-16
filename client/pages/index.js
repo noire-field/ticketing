@@ -1,17 +1,13 @@
-import axios from 'axios';
+import BuildClient from './../api/build-client';
 
-const Index = ({ currentUser }) => {
-    console.log("I am in the component: " + currentUser);
-    return (
-        <div>Home 4</div>
-    )
+const LandingPage = ({ currentUser }) => {
+    return currentUser ? <h1>You are signed in</h1> : <h1>You are not signed in</h1>
 }
 
-Index.getInitialProps = async () => {
-
-    const response = await axios.get('/api/users/current-user');
-
-    return response.currentUser;
+LandingPage.getInitialProps = async (context) => {
+    const client = BuildClient(context);
+    const { data } = await client.get('/api/users/current-user');
+    return data;
 }
 
-export default Index;
+export default LandingPage;
