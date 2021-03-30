@@ -3,6 +3,8 @@ import { body } from 'express-validator';
 import { RequireAuth, ValidateRequest } from '@nb_tickets/common';
 import Ticket from './../models/Ticket';
 
+import { TicketCreatedPublisher } from './../events/publishers/TicketCreatedPublisher';
+
 const router = express.Router();
 
 router.post('/api/tickets', RequireAuth, [
@@ -13,6 +15,12 @@ router.post('/api/tickets', RequireAuth, [
     const ticket = Ticket.Build({ title, price, userId: req.currentUser!.id });
 
     await ticket.save();
+    new TicketCreatedPublisher(client).Publish({ 
+        id: ticket.id,
+        title: ticket.title,
+        price: title.price,
+        userId: ticket.userId
+    })
 
     return res.status(201).send(ticket);
 });
