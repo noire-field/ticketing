@@ -3,6 +3,9 @@ import { body } from 'express-validator';
 import { NotFoundError, NotAuthorizedError, ValidateRequest, RequireAuth } from '@nb_tickets/common';
 import Ticket from './../models/Ticket';
 
+import { natsWrapper } from './../nats-wrapper';
+import { TicketUpdatedPublisher } from './../events/publishers/TicketUpdatedPublisher';
+
 const router = express.Router();
 
 router.put('/api/tickets/:id', RequireAuth, [
@@ -20,6 +23,12 @@ router.put('/api/tickets/:id', RequireAuth, [
     ticket.set({ title, price });
 
     await ticket.save();
+    new TicketUpdatedPublisher(natsWrapper.client).Publish({
+        id: ticket.id,
+        title: ticket.title,
+        price: ticket.price,
+        userId: ticket.userId
+    });
 
     return res.send(ticket);
 });

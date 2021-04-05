@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { RequireAuth, ValidateRequest } from '@nb_tickets/common';
 import Ticket from './../models/Ticket';
+import { natsWrapper } from './../nats-wrapper';
 
 import { TicketCreatedPublisher } from './../events/publishers/TicketCreatedPublisher';
 
@@ -15,12 +16,12 @@ router.post('/api/tickets', RequireAuth, [
     const ticket = Ticket.Build({ title, price, userId: req.currentUser!.id });
 
     await ticket.save();
-    new TicketCreatedPublisher(client).Publish({ 
+    await new TicketCreatedPublisher(natsWrapper.client).Publish({ 
         id: ticket.id,
         title: ticket.title,
         price: title.price,
         userId: ticket.userId
-    })
+    });
 
     return res.status(201).send(ticket);
 });
