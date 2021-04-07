@@ -3,7 +3,7 @@ kind: Config
 deploy:
   kubectl:
       manifests:
-        - ./Infra/K8S/*
+        - ./infra/k8s/*
 build:
   local:
     push: false
@@ -15,14 +15,6 @@ build:
       sync:
         manual:
           - src: 'src/**/*.ts'
-            dest: .
-    - image: noirefield/ticketing-client
-      context: client
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: 'src/**/*.js'
             dest: .
     - image: noirefield/ticketing-tickets
       context: tickets
@@ -39,4 +31,12 @@ build:
       sync:
         manual:
           - src: 'src/**/*.ts'
+            dest: .
+    - image: noirefield/ticketing-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.js'
             dest: .
