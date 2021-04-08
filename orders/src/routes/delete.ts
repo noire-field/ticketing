@@ -1,6 +1,8 @@
 import { RequireAuth, NotFoundError, NotAuthorizedError } from '@nb_tickets/common';
 import express, { Request, Response } from 'express';
 import { Order, OrderStatus } from '../models/Order';
+import { OrderCancelledPublisher } from './../events/publishers/OrderCancelledPublisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -12,6 +14,13 @@ router.delete('/api/orders/:orderId', RequireAuth,async (req: Request, res: Resp
 
     order.status = OrderStatus.Cancelled;
     await order.save();
+
+    new OrderCancelledPublisher(natsWrapper.client).Publish({
+        id: order.id,
+        ticket: {
+            id: order.ticket.id
+        }
+    })
 
     res.status(204).send(order);
 });
