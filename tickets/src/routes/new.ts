@@ -19,7 +19,7 @@ router.post('/api/tickets', RequireAuth, [
     await new TicketCreatedPublisher(natsWrapper.client).Publish({ 
         id: ticket.id,
         title: ticket.title,
-        price: title.price,
+        price: ticket.price,
         userId: ticket.userId
     });
 
