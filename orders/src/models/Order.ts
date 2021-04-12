@@ -47,7 +47,6 @@ const OrderSchema = new mongoose.Schema({
     }
 });
 
-
 OrderSchema.statics.Build = (attributes: OrderAttributes) => {
     return new Order(attributes);
 };
