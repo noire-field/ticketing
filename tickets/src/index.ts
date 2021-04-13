@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import app from './app';
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listeners/OrderCreatedListener';
+import { OrderCancelledListener } from './events/listeners/OrderCancelledListener';
 
 const Start = async () => {
     if(!process.env.JWT_KEY)
@@ -25,16 +27,19 @@ const Start = async () => {
         process.on('SIGINT', () => natsWrapper.client.close())
         process.on('SIGTERM', () => natsWrapper.client.close())
 
+        new OrderCreatedListener(natsWrapper.client).Listen();
+        new OrderCancelledListener(natsWrapper.client).Listen();
+
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true
         });
+
         console.log("[Tickets] Connected to mongodb");
     } catch(err) {
         console.log(err);
     }
-
 
     app.listen(3000, () => {
         console.log("[Tickets] Listening on port 3000!");
