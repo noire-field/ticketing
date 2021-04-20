@@ -1,10 +1,8 @@
 import mongoose from 'mongoose';
 import app from './app';
 import { natsWrapper } from './nats-wrapper';
-import { TicketCreatedListener } from './events/listeners/TicketCreatedListener';
-import { TicketUpdatedListener } from './events/listeners/TicketUpdatedListener';
-import { ExpirationCompletedListener } from './events/listeners/ExpirationCompletedListener';
-import { PaymentCreatedListener } from './events/listeners/PaymentCreatedListener';
+import { OrderCreatedListener } from './events/listeners/OrderCreatedListener';
+import { OrderCancelledListener } from './events/listeners/OrderCancelledListener';
 
 const Start = async () => {
     if(!process.env.JWT_KEY)
@@ -29,25 +27,23 @@ const Start = async () => {
         process.on('SIGINT', () => natsWrapper.client.close())
         process.on('SIGTERM', () => natsWrapper.client.close())
 
-        new TicketCreatedListener(natsWrapper.client).Listen();
-        new TicketUpdatedListener(natsWrapper.client).Listen();
-        new ExpirationCompletedListener(natsWrapper.client).Listen();
-        new PaymentCreatedListener(natsWrapper.client).Listen();
-
+        new OrderCreatedListener(natsWrapper.client).Listen();
+        new OrderCancelledListener(natsWrapper.client).Listen();
+   
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true
         });
 
-        console.log("[Orders] Connected to mongodb");
+        console.log("[Payments] Connected to mongodb");
     } catch(err) {
         console.log(err);
     }
 
 
     app.listen(3000, () => {
-        console.log("[Orders] Listening on port 3000!");
+        console.log("[Payments] Listening on port 3000!");
     });
 }
 
