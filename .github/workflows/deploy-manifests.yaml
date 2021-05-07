@@ -13,8 +13,8 @@ env:
   GKE_ZONE: asia-southeast1-a   # TODO: update to cluster zone
 
 jobs:
-  Build-Push-Deploy:
-    name: Build - Push - Deploy
+  Apply-Manifests:
+    name: Apply All Manifests
     runs-on: ubuntu-latest
     environment: production
 
