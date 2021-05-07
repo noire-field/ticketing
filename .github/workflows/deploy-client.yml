@@ -8,6 +8,7 @@ on:
       - 'client/**'
       
 env:
+  SERVICE_FOLDER: client
   DOCKER_IMAGE: noirefield/ticketing-client
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -46,7 +47,7 @@ jobs:
 
     # Build the Docker image
     - name: Docker - Build Image
-      run: cd Auth && docker build -t $DOCKER_IMAGE .
+      run: cd $SERVICE_FOLDER && docker build -t $DOCKER_IMAGE .
       
     - name: Docker - Login to DockerHub
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
