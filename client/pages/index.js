@@ -13,7 +13,7 @@ const LandingPage = ({ currentUser, tickets }) => {
 
     return (
         <div>
-            <h1>Tickets</h1>
+            <h1>Gix Tickets</h1>
             <table className="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
