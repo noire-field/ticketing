@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import app from './app';
 
 const Start = async () => {
-    console.log(`[Auth] Expected mongodb, no need Nats`);
-
     if(!process.env.JWT_KEY)
         throw new Error('Unable to load JWT_KEY from env.');
     if(!process.env.MONGO_URI)

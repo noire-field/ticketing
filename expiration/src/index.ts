@@ -2,8 +2,6 @@ import { OrderCreatedListener } from './events/listeners/OrderCreatedListener';
 import { natsWrapper } from './nats-wrapper';
 
 const Start = async () => {
-    console.log("[Expiration] Starting...");
-
     if(!process.env.NATS_URL)
         throw new Error('Unable to load NATS_URL from env.');
     if(!process.env.NATS_CLIENT_ID)
