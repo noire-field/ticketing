@@ -1,4 +1,4 @@
-name: Deployment Auth
+name: Deployment Payments
 
 on:
   push:
@@ -8,13 +8,13 @@ on:
       - 'Auth/**'
       
 env:
-  DOCKER_IMAGE: noirefield/ticketing-auth
+  DOCKER_IMAGE: noirefield/ticketing-payments
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: ticketing       # TODO: update to cluster name
   GKE_ZONE: asia-southeast1-a   # TODO: update to cluster zone
-  DEPLOYMENT_NAME: auth-depl     # TODO: update to deployment name
+  DEPLOYMENT_NAME: payments-depl     # TODO: update to deployment name
 
 jobs:
   Build-Push-Deploy:
