@@ -5,6 +5,8 @@ import { OrderCreatedListener } from './events/listeners/OrderCreatedListener';
 import { OrderCancelledListener } from './events/listeners/OrderCancelledListener';
 
 const Start = async () => {
+    console.log("[Payments] Starting...");
+
     if(!process.env.JWT_KEY)
         throw new Error('Unable to load JWT_KEY from env.');
     if(!process.env.MONGO_URI)
