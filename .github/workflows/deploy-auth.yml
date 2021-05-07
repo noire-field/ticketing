@@ -20,14 +20,13 @@ on:
       - 'Auth/**'
       
 env:
-  DOCKER_TAG: noirefield/ticketing-auth
+  DOCKER_IMAGE: noirefield/ticketing-auth
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: ticketing       # TODO: update to cluster name
   GKE_ZONE: asia-southeast1-a   # TODO: update to cluster zone
-  DEPLOYMENT_NAME: deploy-auth     # TODO: update to deployment name
-  IMAGE: static-site
+  DEPLOYMENT_NAME: auth-depl     # TODO: update to deployment name
 
 jobs:
   Build-Push-Deploy:
@@ -59,29 +58,17 @@ jobs:
 
     # Build the Docker image
     - name: Docker - Build Image
-      run: cd Auth && docker build -t $DOCKER_TAG .
+      run: cd Auth && docker build -t $DOCKER_IMAGE .
       
     - name: Docker - Login to DockerHub
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       
     # Push the Docker image to Google Container Registry
     - name: Docker - Push Image
-      run: docker push $DOCKER_TAG
- 
-    # Set up kustomize
-    #- name: Set up Kustomize
-    #  run: |-
-    #    curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-    #    chmod u+x ./kustomize
+      run: docker push $DOCKER_IMAGE
 
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
         cd Infra/K8S
-        kubectl apply -f auth-depl.yaml
-        kubectl rollout status deployment auth-depl
-    #  run: |-
-    #    ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-    #    ./kustomize build . | kubectl apply -f -
-    #    kubectl rollout status deployment/$DEPLOYMENT_NAME
-    #    kubectl get services -o wide
+        kubectl rollout restart deployment $DEPLOYMENT_NAME
